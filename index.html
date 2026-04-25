@@ -1056,7 +1056,7 @@ function cardHTML(ai,delay){
   const cc=CCOLOR[ai.cat]||'#29c5f6';
   const sel=picked.has(ai.id)?'sel':'';
   const pinLabel=picked.has(ai.id)?'✓':'＋';
-  return`<div class="card ${sel}" data-id="${ai.id}" data-url="${ai.url}" style="--glow-c:${cc}55;animation-delay:${delay}s" title="Click to visit ${ai.name}">
+  return`<div class="card ${sel}" data-id="${ai.id}" data-url="${ai.url}" style="--glow-c:${cc}55;animation-delay:${delay}s" title="${ai.name}">
   ${ai.isNew?'<div class="nbadge">NEW</div>':''}
   <button class="pin" data-id="${ai.id}" title="Add to compare">${pinLabel}</button>
   <div class="ct">
@@ -1125,11 +1125,6 @@ function render(){
     html=`<div class="ag">${filtered.map((ai,i)=>cardHTML(ai,i*.018)).join('')}</div>`;
   }
   grid.innerHTML=html;
-
-  /* Attach events */
-  grid.querySelectorAll('.pin').forEach(b=>{
-    b.addEventListener('click',e=>{e.stopPropagation();togglePick(b.dataset.id);});
-  });
 }
 
 /* ════════════════════════════════════════════════
@@ -1180,6 +1175,7 @@ function updateCompareBar(){
 }
 
 function openCompare(){
+  if(picked.size<2)return;
   const items=[...picked].map(id=>D.find(d=>d.id===id)).filter(Boolean);
   const rows=[
     ['Company',items.map(a=>a.co)],
@@ -1235,8 +1231,14 @@ document.querySelectorAll('.sort-btn').forEach(b=>b.addEventListener('click',()=
   document.querySelectorAll('.sort-btn').forEach(x=>x.classList.remove('on'));
   b.classList.add('on');sort=b.dataset.s;render();
 }));
+/* Delegated pin listener — attached once, works across re-renders */
+document.getElementById('grid').addEventListener('click',e=>{
+  const pin=e.target.closest('.pin');
+  if(pin){e.stopPropagation();togglePick(pin.dataset.id);}
+});
+
 document.getElementById('cbtn').addEventListener('click',openCompare);
-document.getElementById('cbar-go').addEventListener('click',openCompare);
+document.getElementById('cbar-go').addEventListener('click',()=>{if(picked.size>=2)openCompare();});
 document.getElementById('xbtn').addEventListener('click',()=>{picked.clear();updateBar();updateCompareBar();render();});
 document.getElementById('cbar-clr').addEventListener('click',()=>{picked.clear();updateBar();updateCompareBar();render();});
 document.getElementById('mclose').addEventListener('click',()=>{document.getElementById('overlay').classList.remove('open');document.body.style.overflow='';});

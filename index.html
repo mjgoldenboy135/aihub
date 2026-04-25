@@ -168,7 +168,7 @@ h1{
 .card{
   position:relative;border-radius:var(--r-lg);overflow:hidden;
   background:rgba(8,13,26,.8);border:1px solid var(--bdr);
-  padding:20px;cursor:pointer;
+  padding:20px;cursor:default;
   display:flex;flex-direction:column;gap:13px;
   transition:transform .3s var(--ease),border-color .3s,box-shadow .3s;
   backdrop-filter:blur(16px);
@@ -233,7 +233,9 @@ h1{
 .ct{display:flex;align-items:flex-start;gap:13px;}
 .ci{flex:1;min-width:0;padding-top:2px;}
 .cname{font-family:'Urbanist',sans-serif;font-size:16px;font-weight:800;letter-spacing:-.3px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;}
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;
+  color:inherit;text-decoration:none;display:block;}
+.cname:hover{text-decoration:underline;text-underline-offset:3px;}
 .cco{font-size:11px;color:var(--m1);letter-spacing:.8px;text-transform:uppercase;margin-top:3px;font-family:'JetBrains Mono',monospace;}
 
 /* DESC */
@@ -257,8 +259,10 @@ h1{
   padding:6px 14px;border-radius:7px;border:1px solid rgba(255,255,255,.08);
   background:rgba(255,255,255,.04);color:var(--m2);
   transition:.2s;display:inline-flex;align-items:center;gap:5px;
+  text-decoration:none;
 }
 .card:hover .visit-hint{border-color:rgba(41,197,246,.4);color:var(--cyan);background:rgba(41,197,246,.07);}
+.visit-hint:hover{border-color:rgba(41,197,246,.6) !important;color:var(--cyan) !important;background:rgba(41,197,246,.12) !important;}
 
 /* ════ EMPTY ════ */
 .empty{text-align:center;padding:100px 20px;color:var(--m1);}
@@ -1061,7 +1065,7 @@ function cardHTML(ai,delay){
         onerror="this.onerror=null;this.src='${logoFallback(ai)}'">
     </div>
     <div class="ci">
-      <div class="cname">${ai.name}</div>
+      <a class="cname" href="${ai.url}" target="_blank" rel="noopener noreferrer">${ai.name}</a>
       <div class="cco">${ai.co}</div>
     </div>
   </div>
@@ -1071,7 +1075,7 @@ function cardHTML(ai,delay){
     <span class="plbl ${pCls(ai.price)}">${pLbl(ai.price)}</span>
     <div class="cfr">
       <span class="stars">${stars(ai.r)}</span>
-      <span class="visit-hint">Visit →</span>
+      <a class="visit-hint" href="${ai.url}" target="_blank" rel="noopener noreferrer">Visit →</a>
     </div>
   </div>
 </div>`;
@@ -1123,12 +1127,6 @@ function render(){
   grid.innerHTML=html;
 
   /* Attach events */
-  grid.querySelectorAll('.card').forEach(c=>{
-    c.addEventListener('click',e=>{
-      if(e.target.closest('.pin'))return;
-      window.open(c.dataset.url,'_blank','noopener,noreferrer');
-    });
-  });
   grid.querySelectorAll('.pin').forEach(b=>{
     b.addEventListener('click',e=>{e.stopPropagation();togglePick(b.dataset.id);});
   });

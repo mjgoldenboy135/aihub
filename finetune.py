@@ -73,13 +73,34 @@ def load_model_and_tokenizer(model_name: str, load_in_4bit: bool = False):
 
 # ── LoRA configuration ───────────────────────────────────────────────────────
 
+# Ordered by priority: first match wins
+_LORA_TARGET_CANDIDATES = [
+    ["q_proj", "v_proj"],       # LLaMA, Mistral, OPT, Phi
+    ["query_key_value"],        # BLOOM, Falcon, GPT-NeoX
+    ["c_attn"],                 # GPT-2
+    ["in_proj"],                # MPT
+]
+
+def _detect_target_modules(model) -> list[str]:
+    named = {name.split(".")[-1] for name, _ in model.named_modules()}
+    for candidates in _LORA_TARGET_CANDIDATES:
+        if all(m in named for m in candidates):
+            return candidates
+    raise ValueError(
+        f"Could not auto-detect LoRA target modules. "
+        f"Leaf module names found: {sorted(named)}"
+    )
+
+
 def apply_lora(model, r: int = 16, alpha: int = 32, dropout: float = 0.05):
+    target_modules = _detect_target_modules(model)
+    print(f"LoRA target modules: {target_modules}")
     lora_config = LoraConfig(
         task_type=TaskType.CAUSAL_LM,
         r=r,
         lora_alpha=alpha,
         lora_dropout=dropout,
-        target_modules=["q_proj", "v_proj"],  # adjust per architecture
+        target_modules=target_modules,
         bias="none",
     )
     model = get_peft_model(model, lora_config)

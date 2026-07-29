@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BlueKey</string>
+    <string name="not_connected">Not connected</string>
+    <string name="connected">Connected</string>
+    <string name="connecting">Connecting…</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="make_discoverable">Make Discoverable (300s)</string>
+    <string name="paired_devices">Paired Devices</string>
+    <string name="keyboard">Keyboard</string>
+    <string name="gamepad">Gamepad</string>
+    <string name="media_remote">Media Remote</string>
+    <string name="mouse">Mouse</string>
+    <string name="left_click">Left Click</string>
+    <string name="right_click">Right Click</string>
+    <string name="scroll">Scroll</string>
+    <string name="sensitivity">Sensitivity</string>
+    <string name="bluetooth_required">Bluetooth permissions are required for BlueKey to function</string>
+    <string name="no_paired_devices">No paired devices found. Pair from your host device first.</string>
+</resources>

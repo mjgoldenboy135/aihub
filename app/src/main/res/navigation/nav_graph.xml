@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/menuFragment">
+
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.bluekey.ui.MenuFragment"
+        android:label="Menu"
+        tools:layout="@layout/fragment_menu"
+        xmlns:tools="http://schemas.android.com/tools">
+
+        <action
+            android:id="@+id/action_menu_to_device_scan"
+            app:destination="@id/deviceScanFragment"/>
+
+        <action
+            android:id="@+id/action_menu_to_keyboard"
+            app:destination="@id/keyboardFragment"/>
+
+        <action
+            android:id="@+id/action_menu_to_gamepad"
+            app:destination="@id/gamepadFragment"/>
+
+        <action
+            android:id="@+id/action_menu_to_media"
+            app:destination="@id/mediaRemoteFragment"/>
+
+        <action
+            android:id="@+id/action_menu_to_mouse"
+            app:destination="@id/mouseFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/deviceScanFragment"
+        android:name="com.bluekey.ui.DeviceScanFragment"
+        android:label="Connect"
+        tools:layout="@layout/fragment_device_scan"
+        xmlns:tools="http://schemas.android.com/tools"/>
+
+    <fragment
+        android:id="@+id/keyboardFragment"
+        android:name="com.bluekey.ui.KeyboardFragment"
+        android:label="Keyboard"
+        tools:layout="@layout/fragment_keyboard"
+        xmlns:tools="http://schemas.android.com/tools"/>
+
+    <fragment
+        android:id="@+id/gamepadFragment"
+        android:name="com.bluekey.ui.GamepadFragment"
+        android:label="Gamepad"
+        tools:layout="@layout/fragment_gamepad"
+        xmlns:tools="http://schemas.android.com/tools"/>
+
+    <fragment
+        android:id="@+id/mediaRemoteFragment"
+        android:name="com.bluekey.ui.MediaRemoteFragment"
+        android:label="Media Remote"
+        tools:layout="@layout/fragment_media"
+        xmlns:tools="http://schemas.android.com/tools"/>
+
+    <fragment
+        android:id="@+id/mouseFragment"
+        android:name="com.bluekey.ui.MouseFragment"
+        android:label="Mouse"
+        tools:layout="@layout/fragment_mouse"
+        xmlns:tools="http://schemas.android.com/tools"/>
+
+</navigation>

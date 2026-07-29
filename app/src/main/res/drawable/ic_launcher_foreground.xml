@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Bluetooth-style B symbol as foreground -->
+    <path
+        android:fillColor="#BB86FC"
+        android:pathData="M38,20 L38,88 L60,88 Q76,88 76,72 Q76,62 66,58 Q76,54 76,44 Q76,20 60,20 Z M50,32 L60,32 Q64,32 64,44 Q64,56 60,56 L50,56 Z M50,66 L60,66 Q64,66 64,76 Q64,86 60,86 L50,86 Z"/>
+</vector>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000">
+
+    <!-- Touchpad area -->
+    <FrameLayout
+        android:id="@+id/touchpad"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#1A1A2E"
+        android:foreground="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Touchpad\nSlide to move  &#x2022;  Tap to click"
+            android:textColor="#555555"
+            android:textSize="14sp"
+            android:gravity="center"/>
+    </FrameLayout>
+
+    <!-- Sensitivity bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:background="@color/surface">
+
+        <TextView
+            android:id="@+id/tvSensitivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sensitivity: 1.5x"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:minWidth="120dp"/>
+
+        <SeekBar
+            android:id="@+id/seekSensitivity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="100"
+            android:progress="50"/>
+    </LinearLayout>
+
+    <!-- Buttons row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:background="@color/background">
+
+        <Button
+            android:id="@+id/btnLeftClick"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="LEFT CLICK"
+            android:textSize="12sp"
+            android:backgroundTint="@color/surface"
+            android:textColor="@color/white"
+            android:layout_marginEnd="2dp"/>
+
+        <Button
+            android:id="@+id/btnScroll"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="SCROLL"
+            android:textSize="12sp"
+            android:backgroundTint="@color/key_background"
+            android:textColor="@color/text_secondary"
+            android:alpha="0.7"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"/>
+
+        <Button
+            android:id="@+id/btnRightClick"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="RIGHT CLICK"
+            android:textSize="12sp"
+            android:backgroundTint="@color/surface"
+            android:textColor="@color/white"
+            android:layout_marginStart="2dp"/>
+    </LinearLayout>
+
+</LinearLayout>

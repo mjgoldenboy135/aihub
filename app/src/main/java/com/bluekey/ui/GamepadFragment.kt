@@ -121,17 +121,17 @@ class GamepadFragment : Fragment() {
     }
 
     private fun sendGamepad() {
-        val mgr = (activity as? MainActivity)?.btHidManager ?: return
+        val mgr = (activity as? MainActivity)?.hidSender ?: return
         mgr.sendGamepadReport(currentButtons, leftX, leftY, rightX, rightY)
     }
 
     private fun isConnected(): Boolean {
-        return (activity as? MainActivity)?.btHidManager?.isConnected == true
+        return (activity as? MainActivity)?.hidSender?.isConnected == true
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        val mgr = (activity as? MainActivity)?.btHidManager
+        val mgr = (activity as? MainActivity)?.hidSender
         mgr?.sendGamepadRelease()
         _binding = null
     }

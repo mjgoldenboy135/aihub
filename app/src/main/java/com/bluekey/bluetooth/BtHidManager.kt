@@ -11,7 +11,7 @@ import android.util.Log
 import java.util.concurrent.Executors
 
 @SuppressLint("MissingPermission")
-class BtHidManager(private val context: Context) {
+class BtHidManager(private val context: Context) : HidSender {
 
     companion object {
         private const val TAG = "BtHidManager"
@@ -25,8 +25,9 @@ class BtHidManager(private val context: Context) {
     private var connectedDevice: BluetoothDevice? = null
     private val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 
-    val isConnected: Boolean get() = connectedDevice != null
+    override val isConnected: Boolean get() = connectedDevice != null
     val connectedDeviceName: String get() = connectedDevice?.name ?: ""
+    override val connectedLabel: String get() = if (isConnected) "BT: ${connectedDevice?.name}" else ""
 
     // Callbacks set by UI layers
     var onRegistered: ((Boolean) -> Unit)? = null
@@ -140,7 +141,7 @@ class BtHidManager(private val context: Context) {
 
     // ---- Report sending methods ----
 
-    fun sendKeyboardReport(modifiers: Byte, keys: ByteArray) {
+    override fun sendKeyboardReport(modifiers: Byte, keys: ByteArray) {
         // 8-byte keyboard report: modifier, reserved, key[0..5]
         val report = ByteArray(8)
         report[0] = modifiers
@@ -151,11 +152,11 @@ class BtHidManager(private val context: Context) {
         sendReport(REPORT_ID_KEYBOARD, report)
     }
 
-    fun sendKeyboardRelease() {
+    override fun sendKeyboardRelease() {
         sendReport(REPORT_ID_KEYBOARD, ByteArray(8))
     }
 
-    fun sendMouseReport(buttons: Byte, dx: Int, dy: Int, wheel: Int) {
+    override fun sendMouseReport(buttons: Byte, dx: Int, dy: Int, wheel: Int) {
         val report = ByteArray(4)
         report[0] = buttons
         report[1] = dx.coerceIn(-127, 127).toByte()
@@ -164,22 +165,22 @@ class BtHidManager(private val context: Context) {
         sendReport(REPORT_ID_MOUSE, report)
     }
 
-    fun sendMouseRelease() {
+    override fun sendMouseRelease() {
         sendReport(REPORT_ID_MOUSE, ByteArray(4))
     }
 
-    fun sendConsumerReport(usage: Int) {
+    override fun sendConsumerReport(usage: Int) {
         val report = ByteArray(2)
         report[0] = (usage and 0xFF).toByte()
         report[1] = ((usage shr 8) and 0xFF).toByte()
         sendReport(REPORT_ID_CONSUMER, report)
     }
 
-    fun sendConsumerRelease() {
+    override fun sendConsumerRelease() {
         sendReport(REPORT_ID_CONSUMER, ByteArray(2))
     }
 
-    fun sendGamepadReport(buttons: Int, lx: Int, ly: Int, rx: Int, ry: Int) {
+    override fun sendGamepadReport(buttons: Int, lx: Int, ly: Int, rx: Int, ry: Int) {
         val report = ByteArray(6)
         report[0] = (buttons and 0xFF).toByte()
         report[1] = ((buttons shr 8) and 0xFF).toByte()
@@ -190,7 +191,7 @@ class BtHidManager(private val context: Context) {
         sendReport(REPORT_ID_GAMEPAD, report)
     }
 
-    fun sendGamepadRelease() {
+    override fun sendGamepadRelease() {
         sendReport(REPORT_ID_GAMEPAD, ByteArray(6))
     }
 

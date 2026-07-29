@@ -1,6 +1,5 @@
 package com.bluekey.ui
 
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothProfile
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,114 +28,85 @@ class MenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val btHidManager = (activity as? MainActivity)?.btHidManager
+        val mainActivity = activity as? MainActivity ?: return
 
-        // Set up connection callbacks
-        btHidManager?.onConnectionChanged = { device, state ->
-            activity?.runOnUiThread {
-                updateConnectionStatus(device, state)
-            }
+        // ── Bluetooth callbacks ────────────────────────────────────────────
+
+        mainActivity.btHidManager.onConnectionChanged = { device, state ->
+            activity?.runOnUiThread { refreshStatus() }
         }
 
-        btHidManager?.onRegistered = { registered ->
+        mainActivity.btHidManager.onRegistered = { registered ->
             activity?.runOnUiThread {
-                if (registered) {
-                    binding.statusChip.text = "Ready — not connected"
-                    binding.statusChip.setBackgroundColor(
-                        requireContext().getColor(R.color.status_ready)
-                    )
-                } else {
-                    binding.statusChip.text = "HID not registered"
-                    binding.statusChip.setBackgroundColor(
-                        requireContext().getColor(R.color.status_disconnected)
-                    )
+                if (registered && mainActivity.hidSender == null) {
+                    setChip("Ready — not connected", R.color.status_ready)
                 }
             }
         }
 
-        // Initial state
-        if (btHidManager?.isConnected == true) {
-            binding.statusChip.text = "Connected: ${btHidManager.connectedDeviceName}"
-            binding.statusChip.setBackgroundColor(
-                requireContext().getColor(R.color.status_connected)
-            )
-            binding.btnConnect.text = "Disconnect"
-        } else {
-            binding.statusChip.text = "Not connected"
-            binding.statusChip.setBackgroundColor(
-                requireContext().getColor(R.color.status_disconnected)
-            )
-            binding.btnConnect.text = "Connect"
+        // ── WiFi callbacks ─────────────────────────────────────────────────
+
+        mainActivity.wifiHidManager.onConnectionChanged = { _, _ ->
+            activity?.runOnUiThread { refreshStatus() }
         }
 
-        // Card buttons
+        // ── Mode buttons ───────────────────────────────────────────────────
+
         binding.cardKeyboard.setOnClickListener {
-            if (checkConnected()) {
-                findNavController().navigate(R.id.action_menu_to_keyboard)
-            }
+            if (checkConnected()) findNavController().navigate(R.id.action_menu_to_keyboard)
         }
-
         binding.cardGamepad.setOnClickListener {
-            if (checkConnected()) {
-                findNavController().navigate(R.id.action_menu_to_gamepad)
-            }
+            if (checkConnected()) findNavController().navigate(R.id.action_menu_to_gamepad)
         }
-
         binding.cardMedia.setOnClickListener {
-            if (checkConnected()) {
-                findNavController().navigate(R.id.action_menu_to_media)
-            }
+            if (checkConnected()) findNavController().navigate(R.id.action_menu_to_media)
         }
-
         binding.cardMouse.setOnClickListener {
-            if (checkConnected()) {
-                findNavController().navigate(R.id.action_menu_to_mouse)
-            }
+            if (checkConnected()) findNavController().navigate(R.id.action_menu_to_mouse)
         }
 
-        // Connect / Disconnect button
+        // ── Connect / Disconnect button ────────────────────────────────────
+
         binding.btnConnect.setOnClickListener {
-            val mgr = btHidManager ?: return@setOnClickListener
-            if (mgr.isConnected) {
-                mgr.disconnect()
+            val sender = mainActivity.hidSender
+            if (sender != null) {
+                // Disconnect whichever is active
+                if (mainActivity.wifiHidManager.isConnected) {
+                    mainActivity.wifiHidManager.disconnect()
+                } else {
+                    mainActivity.btHidManager.disconnect()
+                }
             } else {
                 findNavController().navigate(R.id.action_menu_to_device_scan)
             }
         }
+
+        refreshStatus()
     }
 
-    private fun checkConnected(): Boolean {
-        val mgr = (activity as? MainActivity)?.btHidManager
-        return if (mgr?.isConnected == true) {
-            true
+    private fun refreshStatus() {
+        val mainActivity = activity as? MainActivity ?: return
+        val sender = mainActivity.hidSender
+        if (sender != null) {
+            setChip("● ${sender.connectedLabel}", R.color.status_connected)
+            binding.btnConnect.text = "Disconnect"
         } else {
-            Toast.makeText(requireContext(), "Not connected", Toast.LENGTH_SHORT).show()
-            false
+            setChip("Not connected", R.color.status_disconnected)
+            binding.btnConnect.text = "Connect"
         }
     }
 
-    private fun updateConnectionStatus(device: BluetoothDevice?, state: Int) {
-        when (state) {
-            BluetoothProfile.STATE_CONNECTED -> {
-                binding.statusChip.text = "Connected: ${device?.name ?: "Unknown"}"
-                binding.statusChip.setBackgroundColor(
-                    requireContext().getColor(R.color.status_connected)
-                )
-                binding.btnConnect.text = "Disconnect"
-            }
-            BluetoothProfile.STATE_CONNECTING -> {
-                binding.statusChip.text = "Connecting..."
-                binding.statusChip.setBackgroundColor(
-                    requireContext().getColor(R.color.status_connecting)
-                )
-            }
-            BluetoothProfile.STATE_DISCONNECTED -> {
-                binding.statusChip.text = "Disconnected"
-                binding.statusChip.setBackgroundColor(
-                    requireContext().getColor(R.color.status_disconnected)
-                )
-                binding.btnConnect.text = "Connect"
-            }
+    private fun setChip(text: String, colorRes: Int) {
+        binding.statusChip.text = text
+        binding.statusChip.setBackgroundColor(requireContext().getColor(colorRes))
+    }
+
+    private fun checkConnected(): Boolean {
+        return if ((activity as? MainActivity)?.hidSender != null) {
+            true
+        } else {
+            Toast.makeText(requireContext(), "Not connected — tap Connect first", Toast.LENGTH_SHORT).show()
+            false
         }
     }
 

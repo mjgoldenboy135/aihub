@@ -1,127 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/background"
-    android:padding="16dp">
+    android:background="@color/background">
 
-    <!-- Title -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Connect via Bluetooth"
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:paddingTop="16dp"
-        android:paddingBottom="8dp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Make your device discoverable, then pair from your host device's Bluetooth settings."
-        android:textColor="@color/text_secondary"
-        android:textSize="13sp"
-        android:gravity="center"
-        android:paddingBottom="16dp"/>
-
-    <!-- Make Discoverable button -->
-    <Button
-        android:id="@+id/btnMakeDiscoverable"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="Make Discoverable (300s)"
-        android:backgroundTint="@color/primary"
-        android:textColor="@color/black"
-        android:textSize="14sp"/>
-
-    <!-- Countdown timer -->
-    <TextView
-        android:id="@+id/tvCountdown"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="@color/secondary"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:padding="8dp"
-        android:visibility="gone"/>
-
-    <!-- Divider -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/surface"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"/>
-
-    <!-- Paired devices header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingBottom="8dp">
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Connect to Host"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingTop="16dp"
+            android:paddingBottom="4dp"/>
+
+        <!-- ── WiFi section ──────────────────────────────────── -->
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Paired Devices"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:text="WiFi"
+            android:textColor="@color/secondary"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.1"
+            android:paddingTop="20dp"
+            android:paddingBottom="6dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter the IP of the PC or phone running the BlueKey companion server. Run pc_server.py on the host first."
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:paddingBottom="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <Button
+                android:id="@+id/btnWifiConnect"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Connect to Host IP…"
+                android:backgroundTint="@color/secondary"
+                android:textColor="@color/black"
+                android:textSize="13sp"/>
+
+            <Button
+                android:id="@+id/btnWifiDisconnect"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:text="Disconnect"
+                android:backgroundTint="@color/surface"
+                android:textColor="@color/error"
+                android:textSize="13sp"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <!-- ── Divider ───────────────────────────────────────── -->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/surface"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- ── Bluetooth section ─────────────────────────────── -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bluetooth"
+            android:textColor="@color/primary"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.1"
+            android:paddingTop="8dp"
+            android:paddingBottom="6dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Make your device discoverable, then pair from the host device's Bluetooth settings."
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:paddingBottom="10dp"/>
 
         <Button
-            android:id="@+id/btnRefreshDevices"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:text="Refresh"
-            android:textSize="12sp"
-            android:backgroundTint="@color/surface"
-            android:textColor="@color/primary"/>
+            android:id="@+id/btnMakeDiscoverable"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Make Discoverable (300s)"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/black"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/tvCountdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/secondary"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:visibility="gone"/>
+
+        <!-- Paired devices header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Paired Devices"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/btnRefreshDevices"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Refresh"
+                android:textSize="12sp"
+                android:backgroundTint="@color/surface"
+                android:textColor="@color/primary"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvNoPairedDevices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No paired devices found. Pair from your host device first."
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:visibility="gone"/>
+
+        <ListView
+            android:id="@+id/listBondedDevices"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:divider="@color/surface"
+            android:dividerHeight="1dp"/>
+
+        <!-- Status bar -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/surface"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvConnectionStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Not connected"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:padding="8dp"/>
+
     </LinearLayout>
-
-    <!-- No paired devices hint -->
-    <TextView
-        android:id="@+id/tvNoPairedDevices"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No paired devices found. Pair from your host device first."
-        android:textColor="@color/text_secondary"
-        android:textSize="13sp"
-        android:gravity="center"
-        android:padding="16dp"
-        android:visibility="gone"/>
-
-    <!-- Bonded devices list -->
-    <ListView
-        android:id="@+id/listBondedDevices"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="@color/surface"
-        android:dividerHeight="1dp"/>
-
-    <!-- Connection status bar at bottom -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/surface"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"/>
-
-    <TextView
-        android:id="@+id/tvConnectionStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Not connected"
-        android:textColor="@color/text_secondary"
-        android:textSize="13sp"
-        android:gravity="center"
-        android:padding="8dp"/>
-
-</LinearLayout>
+</ScrollView>

@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.bluekey.bluetooth.BtHidManager
+import com.bluekey.bluetooth.HidSender
+import com.bluekey.bluetooth.WifiHidManager
 import com.bluekey.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +22,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     lateinit var btHidManager: BtHidManager
+    val wifiHidManager = WifiHidManager()
+
+    /** Returns the active HID sender — WiFi takes priority over Bluetooth when both are connected. */
+    val hidSender: HidSender?
+        get() = when {
+            wifiHidManager.isConnected -> wifiHidManager
+            btHidManager.isConnected   -> btHidManager
+            else                       -> null
+        }
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 

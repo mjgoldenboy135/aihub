@@ -7,11 +7,14 @@ import android.bluetooth.BluetoothProfile
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bluekey.MainActivity
@@ -39,18 +42,19 @@ class DeviceScanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val btHidManager = (activity as? MainActivity)?.btHidManager
+        val activity = activity as? MainActivity ?: return
+        val btHidManager = activity.btHidManager
+        val wifiHidManager = activity.wifiHidManager
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
-        // Set up bonded devices list
+        // ── Bluetooth section ──────────────────────────────────────────────
+
         val deviceNames = mutableListOf<String>()
         listAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, deviceNames)
         binding.listBondedDevices.adapter = listAdapter
 
-        // Populate bonded devices
         refreshBondedDevices(bluetoothAdapter, deviceNames)
 
-        // Make discoverable button
         binding.btnMakeDiscoverable.setOnClickListener {
             val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
                 putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
@@ -59,50 +63,96 @@ class DeviceScanFragment : Fragment() {
             startCountdown(300)
         }
 
-        // Bonded device tap
         binding.listBondedDevices.setOnItemClickListener { _, _, position, _ ->
             if (position < bondedDevices.size) {
                 val device = bondedDevices[position]
-                binding.tvConnectionStatus.text = "Connecting to ${device.name}..."
-                btHidManager?.connectToDevice(device)
+                updateStatus("Connecting to ${device.name}…")
+                btHidManager.connectToDevice(device)
             }
         }
 
-        // Observe connection changes
-        btHidManager?.onConnectionChanged = { device, state ->
-            activity?.runOnUiThread {
+        binding.btnRefreshDevices.setOnClickListener {
+            refreshBondedDevices(bluetoothAdapter, deviceNames)
+        }
+
+        btHidManager.onConnectionChanged = { device, state ->
+            activity.runOnUiThread {
                 when (state) {
                     BluetoothProfile.STATE_CONNECTED -> {
-                        binding.tvConnectionStatus.text = "Connected: ${device?.name}"
-                        Toast.makeText(
-                            requireContext(),
-                            "Connected to ${device?.name}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        updateStatus("Connected (BT): ${device?.name}")
+                        Toast.makeText(requireContext(), "Connected to ${device?.name}", Toast.LENGTH_SHORT).show()
                         countdownTimer?.cancel()
                         findNavController().navigateUp()
                     }
-                    BluetoothProfile.STATE_CONNECTING -> {
-                        binding.tvConnectionStatus.text = "Connecting to ${device?.name}..."
-                    }
-                    BluetoothProfile.STATE_DISCONNECTED -> {
-                        binding.tvConnectionStatus.text = "Not connected"
+                    BluetoothProfile.STATE_CONNECTING -> updateStatus("Connecting to ${device?.name}…")
+                    BluetoothProfile.STATE_DISCONNECTED -> updateStatus("Not connected")
+                }
+            }
+        }
+
+        // ── WiFi section ───────────────────────────────────────────────────
+
+        binding.btnWifiConnect.setOnClickListener {
+            showWifiConnectDialog()
+        }
+
+        binding.btnWifiDisconnect.setOnClickListener {
+            wifiHidManager.disconnect()
+        }
+
+        wifiHidManager.onConnectionChanged = { connected, info ->
+            activity.runOnUiThread {
+                if (connected) {
+                    updateStatus("Connected (WiFi): $info")
+                    binding.btnWifiDisconnect.visibility = View.VISIBLE
+                    binding.btnWifiConnect.text = "Change Host"
+                    Toast.makeText(requireContext(), "WiFi connected to $info", Toast.LENGTH_SHORT).show()
+                    findNavController().navigateUp()
+                } else {
+                    binding.btnWifiDisconnect.visibility = View.GONE
+                    binding.btnWifiConnect.text = "Connect to Host IP…"
+                    updateStatus(if (btHidManager.isConnected) "Connected (BT): ${btHidManager.connectedDeviceName}" else "Not connected")
+                    if (info.isNotBlank() && info != "Disconnected") {
+                        Toast.makeText(requireContext(), "WiFi error: $info", Toast.LENGTH_LONG).show()
                     }
                 }
             }
         }
 
-        // Refresh bonded devices button
-        binding.btnRefreshDevices.setOnClickListener {
-            refreshBondedDevices(bluetoothAdapter, deviceNames)
-        }
+        // ── Initial state ──────────────────────────────────────────────────
 
-        // Initial status
-        if (btHidManager?.isConnected == true) {
-            binding.tvConnectionStatus.text = "Connected: ${btHidManager.connectedDeviceName}"
-        } else {
-            binding.tvConnectionStatus.text = "Not connected"
+        updateStatus(
+            when {
+                wifiHidManager.isConnected -> "Connected (WiFi): ${wifiHidManager.connectedLabel}"
+                btHidManager.isConnected   -> "Connected (BT): ${btHidManager.connectedDeviceName}"
+                else                       -> "Not connected"
+            }
+        )
+        binding.btnWifiDisconnect.visibility = if (wifiHidManager.isConnected) View.VISIBLE else View.GONE
+        if (wifiHidManager.isConnected) binding.btnWifiConnect.text = "Change Host"
+    }
+
+    private fun showWifiConnectDialog() {
+        val input = EditText(requireContext()).apply {
+            hint = "192.168.x.x"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
+            setPadding(48, 32, 48, 16)
         }
+        AlertDialog.Builder(requireContext())
+            .setTitle("Connect via WiFi")
+            .setMessage("Enter the IP address of the PC or device running the BlueKey companion server (port 8080).")
+            .setView(input)
+            .setPositiveButton("Connect") { _, _ ->
+                val host = input.text.toString().trim()
+                if (host.isNotEmpty()) {
+                    updateStatus("Connecting to $host…")
+                    (activity as? MainActivity)?.wifiHidManager?.connect(host)
+                } else {
+                    Toast.makeText(requireContext(), "Please enter an IP address", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun refreshBondedDevices(
@@ -117,11 +167,11 @@ class DeviceScanFragment : Fragment() {
             deviceNames.add("${device.name} (${device.address})")
         }
         listAdapter?.notifyDataSetChanged()
-        if (bondedDevices.isEmpty()) {
-            binding.tvNoPairedDevices.visibility = View.VISIBLE
-        } else {
-            binding.tvNoPairedDevices.visibility = View.GONE
-        }
+        binding.tvNoPairedDevices.visibility = if (bondedDevices.isEmpty()) View.VISIBLE else View.GONE
+    }
+
+    private fun updateStatus(text: String) {
+        binding.tvConnectionStatus.text = text
     }
 
     private fun startCountdown(seconds: Int) {
@@ -129,10 +179,8 @@ class DeviceScanFragment : Fragment() {
         binding.tvCountdown.visibility = View.VISIBLE
         countdownTimer = object : CountDownTimer(seconds * 1000L, 1000L) {
             override fun onTick(millisUntilFinished: Long) {
-                val s = millisUntilFinished / 1000
-                binding.tvCountdown.text = "Discoverable for ${s}s"
+                binding.tvCountdown.text = "Discoverable for ${millisUntilFinished / 1000}s"
             }
-
             override fun onFinish() {
                 binding.tvCountdown.text = "Discoverable time expired"
             }

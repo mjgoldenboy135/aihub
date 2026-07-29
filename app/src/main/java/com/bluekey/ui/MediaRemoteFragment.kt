@@ -68,11 +68,11 @@ class MediaRemoteFragment : Fragment() {
                         Snackbar.make(binding.root, "Not connected", Snackbar.LENGTH_SHORT).show()
                         return@setOnTouchListener true
                     }
-                    (activity as? MainActivity)?.btHidManager?.sendConsumerReport(usage)
+                    (activity as? MainActivity)?.hidSender?.sendConsumerReport(usage)
                     true
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    (activity as? MainActivity)?.btHidManager?.sendConsumerRelease()
+                    (activity as? MainActivity)?.hidSender?.sendConsumerRelease()
                     true
                 }
                 else -> false
@@ -89,11 +89,11 @@ class MediaRemoteFragment : Fragment() {
                         Snackbar.make(binding.root, "Not connected", Snackbar.LENGTH_SHORT).show()
                         return@setOnTouchListener true
                     }
-                    (activity as? MainActivity)?.btHidManager?.sendKeyboardReport(modifier, keys)
+                    (activity as? MainActivity)?.hidSender?.sendKeyboardReport(modifier, keys)
                     true
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    (activity as? MainActivity)?.btHidManager?.sendKeyboardRelease()
+                    (activity as? MainActivity)?.hidSender?.sendKeyboardRelease()
                     true
                 }
                 else -> false
@@ -110,14 +110,14 @@ class MediaRemoteFragment : Fragment() {
                         Snackbar.make(binding.root, "Not connected", Snackbar.LENGTH_SHORT).show()
                         return@setOnTouchListener true
                     }
-                    (activity as? MainActivity)?.btHidManager?.sendKeyboardReport(
+                    (activity as? MainActivity)?.hidSender?.sendKeyboardReport(
                         KeyCodes.MOD_LEFT_GUI.toByte(),
                         byteArrayOf(0)
                     )
                     true
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    (activity as? MainActivity)?.btHidManager?.sendKeyboardRelease()
+                    (activity as? MainActivity)?.hidSender?.sendKeyboardRelease()
                     true
                 }
                 else -> false
@@ -126,7 +126,7 @@ class MediaRemoteFragment : Fragment() {
     }
 
     private fun isConnected(): Boolean {
-        return (activity as? MainActivity)?.btHidManager?.isConnected == true
+        return (activity as? MainActivity)?.hidSender?.isConnected == true
     }
 
     override fun onDestroyView() {

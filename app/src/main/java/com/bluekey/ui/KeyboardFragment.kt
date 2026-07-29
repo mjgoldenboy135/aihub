@@ -128,7 +128,7 @@ class KeyboardFragment : Fragment() {
     }
 
     private fun updateConnectionStatus() {
-        val mgr = (activity as? MainActivity)?.btHidManager
+        val mgr = (activity as? MainActivity)?.hidSender
         if (mgr?.isConnected == true) {
             binding.tvConnectionDot.setTextColor(Color.parseColor("#4CAF50"))
             binding.tvConnectionDot.text = "●"
@@ -213,7 +213,7 @@ class KeyboardFragment : Fragment() {
     }
 
     private fun handleKeyDown(keyDef: KeyDef, btn: Button) {
-        val mgr = (activity as? MainActivity)?.btHidManager
+        val mgr = (activity as? MainActivity)?.hidSender
         if (mgr?.isConnected != true) {
             Snackbar.make(binding.root, "Not connected", Snackbar.LENGTH_SHORT).show()
             return
@@ -261,7 +261,7 @@ class KeyboardFragment : Fragment() {
         if (keyDef.isSpecial && (keyDef.label == "Shift" || keyDef.label == "ABC" || keyDef.label == "123")) {
             return
         }
-        val mgr = (activity as? MainActivity)?.btHidManager
+        val mgr = (activity as? MainActivity)?.hidSender
         mgr?.sendKeyboardRelease()
 
         // One-shot shift: auto-clear after a key press

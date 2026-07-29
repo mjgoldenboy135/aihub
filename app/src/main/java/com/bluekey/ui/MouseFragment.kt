@@ -109,7 +109,7 @@ class MouseFragment : Fragment() {
                     val dx = (rawDx * sensitivity).toInt()
                     val dy = (rawDy * sensitivity).toInt()
 
-                    val mgr = (activity as? MainActivity)?.btHidManager
+                    val mgr = (activity as? MainActivity)?.hidSender
                     if (isScrollMode) {
                         // Use Y movement as scroll wheel
                         val wheel = -dy // invert: finger up = scroll up
@@ -135,7 +135,7 @@ class MouseFragment : Fragment() {
     }
 
     private fun sendClick(button: Int) {
-        val mgr = (activity as? MainActivity)?.btHidManager ?: return
+        val mgr = (activity as? MainActivity)?.hidSender ?: return
         mgr.sendMouseReport(button.toByte(), 0, 0, 0)
         // Short delay then release
         binding.root.postDelayed({
@@ -144,12 +144,12 @@ class MouseFragment : Fragment() {
     }
 
     private fun isConnected(): Boolean {
-        return (activity as? MainActivity)?.btHidManager?.isConnected == true
+        return (activity as? MainActivity)?.hidSender?.isConnected == true
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        val mgr = (activity as? MainActivity)?.btHidManager
+        val mgr = (activity as? MainActivity)?.hidSender
         mgr?.sendMouseRelease()
         _binding = null
     }

@@ -89,32 +89,45 @@ class BtHidManager(private val context: Context) : HidSender {
     }
 
     private fun registerApp() {
-        val sdpSettings = BluetoothHidDeviceAppSdpSettings(
-            "BlueKey HID",
-            "Bluetooth HID Peripheral",
-            "BlueKey",
-            BluetoothHidDevice.SUBCLASS1_COMBO,
-            HidDescriptors.COMBINED_DESCRIPTOR
-        )
-        val executor = Executors.newCachedThreadPool()
-        val registered = hidDevice?.registerApp(sdpSettings, null, null, executor, hidCallback)
-        Log.d(TAG, "registerApp result: $registered")
+        try {
+            val sdpSettings = BluetoothHidDeviceAppSdpSettings(
+                "BlueKey HID",
+                "Bluetooth HID Peripheral",
+                "BlueKey",
+                BluetoothHidDevice.SUBCLASS1_COMBO,
+                HidDescriptors.COMBINED_DESCRIPTOR
+            )
+            val executor = Executors.newCachedThreadPool()
+            val registered = hidDevice?.registerApp(sdpSettings, null, null, executor, hidCallback)
+            Log.d(TAG, "registerApp result: $registered")
+        } catch (e: Exception) {
+            Log.e(TAG, "registerApp failed: ${e.message}")
+            onRegistered?.invoke(false)
+        }
     }
 
     fun connect() {
-        val adapter = bluetoothAdapter
-        if (adapter == null) {
-            Log.e(TAG, "Bluetooth not available")
+        try {
+            val adapter = bluetoothAdapter
+            if (adapter == null) {
+                Log.e(TAG, "Bluetooth not available")
+                onRegistered?.invoke(false)
+                return
+            }
+            if (!adapter.isEnabled) {
+                Log.e(TAG, "Bluetooth not enabled")
+                onRegistered?.invoke(false)
+                return
+            }
+            val success = adapter.getProfileProxy(context, serviceListener, BluetoothProfile.HID_DEVICE)
+            Log.d(TAG, "getProfileProxy result: $success")
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Bluetooth permission denied: ${e.message}")
             onRegistered?.invoke(false)
-            return
-        }
-        if (!adapter.isEnabled) {
-            Log.e(TAG, "Bluetooth not enabled")
+        } catch (e: Exception) {
+            Log.e(TAG, "Bluetooth init failed: ${e.message}")
             onRegistered?.invoke(false)
-            return
         }
-        val success = adapter.getProfileProxy(context, serviceListener, BluetoothProfile.HID_DEVICE)
-        Log.d(TAG, "getProfileProxy result: $success")
     }
 
     fun connectToDevice(device: BluetoothDevice) {

@@ -42,9 +42,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        enableImmersiveMode()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        enableImmersiveMode()   // must be after setContentView so decorView is ready
 
         btHidManager = BtHidManager(this)
 

@@ -132,7 +132,7 @@ class KeyboardFragment : Fragment() {
         if (mgr?.isConnected == true) {
             binding.tvConnectionDot.setTextColor(Color.parseColor("#4CAF50"))
             binding.tvConnectionDot.text = "●"
-            binding.tvConnectionLabel.text = "Connected: ${mgr.connectedDeviceName}"
+            binding.tvConnectionLabel.text = "Connected: ${mgr.connectedLabel}"
         } else {
             binding.tvConnectionDot.setTextColor(Color.parseColor("#F44336"))
             binding.tvConnectionDot.text = "●"

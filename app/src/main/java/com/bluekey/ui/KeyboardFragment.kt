@@ -168,6 +168,8 @@ class KeyboardFragment : Fragment() {
             setTextColor(Color.WHITE)
             gravity = Gravity.CENTER
             isAllCaps = false
+            isFocusable = false
+            isFocusableInTouchMode = false
 
             val bg = GradientDrawable().apply {
                 setColor(Color.parseColor(if (keyDef.isSpecial) "#3A3A3A" else "#2A2A2A"))

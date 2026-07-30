@@ -1,0 +1,9 @@
+*.jks
+*.keystore
+*.jks.b64
+*.p12
+/local.properties
+/.idea
+/build
+/app/build
+/app/release.jks

@@ -6,6 +6,9 @@ on:
       - 'v*'          # triggers on v1.0, v1.2.3, etc.
   workflow_dispatch:  # allows manual trigger from GitHub Actions tab
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     name: Build Signed AAB

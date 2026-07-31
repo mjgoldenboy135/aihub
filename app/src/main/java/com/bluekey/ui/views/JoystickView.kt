@@ -18,17 +18,15 @@ class JoystickView @JvmOverloads constructor(
 
     var onJoystickMoved: ((x: Int, y: Int) -> Unit)? = null
 
-    private val outerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#555555")
-        style = Paint.Style.STROKE
-        strokeWidth = 4f
-    }
-
     private val outerFillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#222222")
         style = Paint.Style.FILL
     }
-
+    private val outerRingPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.parseColor("#555555")
+        style = Paint.Style.STROKE
+        strokeWidth = 4f
+    }
     private val thumbPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#BB86FC")
         style = Paint.Style.FILL
@@ -38,6 +36,7 @@ class JoystickView @JvmOverloads constructor(
     private var centerY = 0f
     private var outerRadius = 0f
     private var thumbRadius = 0f
+    private var maxDist = 0f
 
     private var thumbX = 0f
     private var thumbY = 0f
@@ -47,45 +46,33 @@ class JoystickView @JvmOverloads constructor(
         centerX = w / 2f
         centerY = h / 2f
         outerRadius = min(w, h) / 2f - 8f
-        thumbRadius = outerRadius * 0.35f
+        thumbRadius = outerRadius * 0.30f
+        maxDist = outerRadius - thumbRadius
         thumbX = centerX
         thumbY = centerY
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        // Draw outer circle fill
         canvas.drawCircle(centerX, centerY, outerRadius, outerFillPaint)
-        // Draw outer circle ring
-        canvas.drawCircle(centerX, centerY, outerRadius, outerPaint)
-        // Draw thumb
+        canvas.drawCircle(centerX, centerY, outerRadius, outerRingPaint)
         canvas.drawCircle(thumbX, thumbY, thumbRadius, thumbPaint)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
-            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-                val dx = event.x - centerX
-                val dy = event.y - centerY
-                val dist = sqrt(dx * dx + dy * dy)
-                val maxDist = outerRadius - thumbRadius
-
-                if (dist <= maxDist) {
-                    thumbX = event.x
-                    thumbY = event.y
-                } else {
-                    val ratio = maxDist / dist
-                    thumbX = centerX + dx * ratio
-                    thumbY = centerY + dy * ratio
-                }
-
-                val normX = ((thumbX - centerX) / maxDist * 127).toInt().coerceIn(-127, 127)
-                val normY = ((thumbY - centerY) / maxDist * 127).toInt().coerceIn(-127, 127)
-                onJoystickMoved?.invoke(normX, normY)
-                invalidate()
+            MotionEvent.ACTION_DOWN -> {
+                // Prevent parent from stealing MOVE events (fixes uncontrolled movement)
+                parent?.requestDisallowInterceptTouchEvent(true)
+                updateThumb(event.x, event.y)
+                return true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                updateThumb(event.x, event.y)
                 return true
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                parent?.requestDisallowInterceptTouchEvent(false)
                 thumbX = centerX
                 thumbY = centerY
                 onJoystickMoved?.invoke(0, 0)
@@ -93,6 +80,26 @@ class JoystickView @JvmOverloads constructor(
                 return true
             }
         }
-        return super.onTouchEvent(event)
+        return false
+    }
+
+    private fun updateThumb(touchX: Float, touchY: Float) {
+        val dx = touchX - centerX
+        val dy = touchY - centerY
+        val dist = sqrt(dx * dx + dy * dy)
+
+        if (dist <= maxDist) {
+            thumbX = touchX
+            thumbY = touchY
+        } else {
+            val ratio = maxDist / dist
+            thumbX = centerX + dx * ratio
+            thumbY = centerY + dy * ratio
+        }
+
+        val normX = ((thumbX - centerX) / maxDist * 127).toInt().coerceIn(-127, 127)
+        val normY = ((thumbY - centerY) / maxDist * 127).toInt().coerceIn(-127, 127)
+        onJoystickMoved?.invoke(normX, normY)
+        invalidate()
     }
 }

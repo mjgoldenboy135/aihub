@@ -1,6 +1,7 @@
 package com.bluekey.ui
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -96,6 +97,7 @@ class GamepadFragment : Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupGamepadButton(btn: Button, bitIndex: Int) {
+        val originalTint = btn.backgroundTintList
         btn.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -104,14 +106,13 @@ class GamepadFragment : Fragment() {
                         return@setOnTouchListener true
                     }
                     currentButtons = currentButtons or (1 shl bitIndex)
-                    btn.setBackgroundColor(Color.parseColor("#BB86FC"))
+                    btn.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#BB86FC"))
                     sendGamepad()
                     true
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     currentButtons = currentButtons and (1 shl bitIndex).inv()
-                    btn.background = null
-                    btn.setBackgroundColor(Color.parseColor("#2A2A2A"))
+                    btn.backgroundTintList = originalTint
                     sendGamepad()
                     true
                 }

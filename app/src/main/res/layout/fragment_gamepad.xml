@@ -1,293 +1,285 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#000000">
 
-    <!-- LEFT SIDE: Joystick + D-Pad -->
+    <!-- TOP BAR: L2 | L1 ···· SEL HOME START ···· R1 | R2 -->
     <LinearLayout
-        android:id="@+id/layoutLeft"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/layoutCenter"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.35">
-
-        <!-- Shoulder buttons row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="4dp">
-
-            <Button
-                android:id="@+id/btnL2"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="L2"
-                android:textSize="12sp"
-                android:backgroundTint="@color/key_background"
-                android:textColor="@color/white"
-                android:layout_marginEnd="2dp"/>
-
-            <Button
-                android:id="@+id/btnL1"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="L1"
-                android:textSize="12sp"
-                android:backgroundTint="@color/key_background"
-                android:textColor="@color/white"
-                android:layout_marginStart="2dp"/>
-        </LinearLayout>
-
-        <!-- Left Joystick -->
-        <com.bluekey.ui.views.JoystickView
-            android:id="@+id/joystickLeft"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_gravity="center"/>
-
-        <!-- D-Pad -->
-        <GridLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:columnCount="3"
-            android:rowCount="3"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp">
-
-            <!-- Row 1: empty, UP, empty -->
-            <View android:layout_width="50dp" android:layout_height="50dp"/>
-
-            <Button
-                android:id="@+id/btnDpadUp"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:text="&#x25B2;"
-                android:textSize="14sp"
-                android:backgroundTint="@color/key_background"
-                android:textColor="@color/white"
-                android:padding="0dp"/>
-
-            <View android:layout_width="50dp" android:layout_height="50dp"/>
-
-            <!-- Row 2: LEFT, empty, RIGHT -->
-            <Button
-                android:id="@+id/btnDpadLeft"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:text="&#x25C4;"
-                android:textSize="14sp"
-                android:backgroundTint="@color/key_background"
-                android:textColor="@color/white"
-                android:padding="0dp"/>
-
-            <View android:layout_width="50dp" android:layout_height="50dp"/>
-
-            <Button
-                android:id="@+id/btnDpadRight"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:text="&#x25BA;"
-                android:textSize="14sp"
-                android:backgroundTint="@color/key_background"
-                android:textColor="@color/white"
-                android:padding="0dp"/>
-
-            <!-- Row 3: empty, DOWN, empty -->
-            <View android:layout_width="50dp" android:layout_height="50dp"/>
-
-            <Button
-                android:id="@+id/btnDpadDown"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:text="&#x25BC;"
-                android:textSize="14sp"
-                android:backgroundTint="@color/key_background"
-                android:textColor="@color/white"
-                android:padding="0dp"/>
-
-            <View android:layout_width="50dp" android:layout_height="50dp"/>
-        </GridLayout>
-    </LinearLayout>
-
-    <!-- CENTER: Select/Home/Start -->
-    <LinearLayout
-        android:id="@+id/layoutCenter"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="8dp"
-        app:layout_constraintStart_toEndOf="@id/layoutLeft"
-        app:layout_constraintEnd_toStartOf="@id/layoutRight"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.3">
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <Button
+            android:id="@+id/btnL2"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1.4"
+            android:text="L2"
+            android:textSize="13sp"
+            android:backgroundTint="@color/key_background"
+            android:textColor="@color/white"
+            android:focusable="false"
+            android:padding="0dp"
+            android:layout_marginEnd="2dp"/>
+
+        <Button
+            android:id="@+id/btnL1"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="L1"
+            android:textSize="13sp"
+            android:backgroundTint="@color/key_background"
+            android:textColor="@color/white"
+            android:focusable="false"
+            android:padding="0dp"
+            android:layout_marginEnd="6dp"/>
 
         <Button
             android:id="@+id/btnSelect"
-            android:layout_width="60dp"
-            android:layout_height="36dp"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:layout_weight="0.8"
             android:text="SEL"
             android:textSize="10sp"
-            android:backgroundTint="@color/key_background"
-            android:textColor="@color/white"
-            android:layout_marginEnd="4dp"
-            android:padding="0dp"/>
+            android:backgroundTint="#1E1E1E"
+            android:textColor="@color/text_secondary"
+            android:focusable="false"
+            android:padding="0dp"
+            android:layout_marginEnd="4dp"/>
 
         <Button
             android:id="@+id/btnHome"
-            android:layout_width="44dp"
+            android:layout_width="0dp"
             android:layout_height="44dp"
+            android:layout_weight="0.9"
             android:text="&#x2302;"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:backgroundTint="@color/primary"
             android:textColor="@color/black"
+            android:focusable="false"
             android:padding="0dp"/>
 
         <Button
             android:id="@+id/btnStart"
-            android:layout_width="60dp"
-            android:layout_height="36dp"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:layout_weight="0.8"
             android:text="START"
             android:textSize="10sp"
+            android:backgroundTint="#1E1E1E"
+            android:textColor="@color/text_secondary"
+            android:focusable="false"
+            android:padding="0dp"
+            android:layout_marginStart="4dp"/>
+
+        <Button
+            android:id="@+id/btnR1"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="R1"
+            android:textSize="13sp"
             android:backgroundTint="@color/key_background"
             android:textColor="@color/white"
-            android:layout_marginStart="4dp"
-            android:padding="0dp"/>
+            android:focusable="false"
+            android:padding="0dp"
+            android:layout_marginStart="6dp"/>
+
+        <Button
+            android:id="@+id/btnR2"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1.4"
+            android:text="R2"
+            android:textSize="13sp"
+            android:backgroundTint="@color/key_background"
+            android:textColor="@color/white"
+            android:focusable="false"
+            android:padding="0dp"
+            android:layout_marginStart="2dp"/>
+
     </LinearLayout>
 
-    <!-- RIGHT SIDE: ABXY + Right Joystick -->
+    <!-- MAIN BODY -->
     <LinearLayout
-        android:id="@+id/layoutRight"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="8dp"
-        app:layout_constraintStart_toEndOf="@id/layoutCenter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.35">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-        <!-- Shoulder buttons row -->
+        <!-- LEFT: Left Joystick (top) + D-Pad (bottom) -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
             android:gravity="center"
-            android:layout_marginBottom="4dp">
+            android:padding="8dp">
 
-            <Button
-                android:id="@+id/btnR1"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="R1"
-                android:textSize="12sp"
-                android:backgroundTint="@color/key_background"
-                android:textColor="@color/white"
-                android:layout_marginEnd="2dp"/>
+            <com.bluekey.ui.views.JoystickView
+                android:id="@+id/joystickLeft"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_gravity="center"/>
 
-            <Button
-                android:id="@+id/btnR2"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="R2"
-                android:textSize="12sp"
-                android:backgroundTint="@color/key_background"
-                android:textColor="@color/white"
-                android:layout_marginStart="2dp"/>
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:rowCount="3"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp">
+
+                <View android:layout_width="46dp" android:layout_height="46dp"/>
+
+                <Button
+                    android:id="@+id/btnDpadUp"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:text="&#x25B2;"
+                    android:textSize="14sp"
+                    android:backgroundTint="@color/key_background"
+                    android:textColor="@color/white"
+                    android:focusable="false"
+                    android:padding="0dp"/>
+
+                <View android:layout_width="46dp" android:layout_height="46dp"/>
+
+                <Button
+                    android:id="@+id/btnDpadLeft"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:text="&#x25C4;"
+                    android:textSize="14sp"
+                    android:backgroundTint="@color/key_background"
+                    android:textColor="@color/white"
+                    android:focusable="false"
+                    android:padding="0dp"/>
+
+                <View android:layout_width="46dp" android:layout_height="46dp"/>
+
+                <Button
+                    android:id="@+id/btnDpadRight"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:text="&#x25BA;"
+                    android:textSize="14sp"
+                    android:backgroundTint="@color/key_background"
+                    android:textColor="@color/white"
+                    android:focusable="false"
+                    android:padding="0dp"/>
+
+                <View android:layout_width="46dp" android:layout_height="46dp"/>
+
+                <Button
+                    android:id="@+id/btnDpadDown"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:text="&#x25BC;"
+                    android:textSize="14sp"
+                    android:backgroundTint="@color/key_background"
+                    android:textColor="@color/white"
+                    android:focusable="false"
+                    android:padding="0dp"/>
+
+                <View android:layout_width="46dp" android:layout_height="46dp"/>
+
+            </GridLayout>
+
         </LinearLayout>
 
-        <!-- ABXY buttons in diamond pattern -->
-        <GridLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:columnCount="3"
-            android:rowCount="3"
-            android:layout_gravity="center">
+        <!-- RIGHT: ABXY Diamond (top) + Right Joystick (bottom) — mirrors left side -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="8dp">
 
-            <!-- Row 1: empty, Y, empty -->
-            <View android:layout_width="60dp" android:layout_height="60dp"/>
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:rowCount="3"
+                android:layout_gravity="center">
 
-            <Button
-                android:id="@+id/btnY"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:text="Y"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:backgroundTint="#FFC107"
-                android:textColor="@color/black"
-                android:padding="0dp"/>
+                <View android:layout_width="50dp" android:layout_height="50dp"/>
 
-            <View android:layout_width="60dp" android:layout_height="60dp"/>
+                <Button
+                    android:id="@+id/btnY"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="Y"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#FFC107"
+                    android:textColor="@color/black"
+                    android:focusable="false"
+                    android:padding="0dp"/>
 
-            <!-- Row 2: X, empty, B -->
-            <Button
-                android:id="@+id/btnX"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:text="X"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:backgroundTint="#2196F3"
-                android:textColor="@color/white"
-                android:padding="0dp"/>
+                <View android:layout_width="50dp" android:layout_height="50dp"/>
 
-            <View android:layout_width="60dp" android:layout_height="60dp"/>
+                <Button
+                    android:id="@+id/btnX"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="X"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#2196F3"
+                    android:textColor="@color/white"
+                    android:focusable="false"
+                    android:padding="0dp"/>
 
-            <Button
-                android:id="@+id/btnB"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:text="B"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:backgroundTint="#F44336"
-                android:textColor="@color/white"
-                android:padding="0dp"/>
+                <View android:layout_width="50dp" android:layout_height="50dp"/>
 
-            <!-- Row 3: empty, A, empty -->
-            <View android:layout_width="60dp" android:layout_height="60dp"/>
+                <Button
+                    android:id="@+id/btnB"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="B"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#F44336"
+                    android:textColor="@color/white"
+                    android:focusable="false"
+                    android:padding="0dp"/>
 
-            <Button
-                android:id="@+id/btnA"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:text="A"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:backgroundTint="#4CAF50"
-                android:textColor="@color/white"
-                android:padding="0dp"/>
+                <View android:layout_width="50dp" android:layout_height="50dp"/>
 
-            <View android:layout_width="60dp" android:layout_height="60dp"/>
-        </GridLayout>
+                <Button
+                    android:id="@+id/btnA"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="A"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#4CAF50"
+                    android:textColor="@color/white"
+                    android:focusable="false"
+                    android:padding="0dp"/>
 
-        <!-- Right Joystick -->
-        <com.bluekey.ui.views.JoystickView
-            android:id="@+id/joystickRight"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"/>
+                <View android:layout_width="50dp" android:layout_height="50dp"/>
+
+            </GridLayout>
+
+            <com.bluekey.ui.views.JoystickView
+                android:id="@+id/joystickRight"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
